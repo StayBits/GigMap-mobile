@@ -1,5 +1,5 @@
 package com.example.gigmap_frontend_sprint1.view
-
+// imports
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -88,6 +88,7 @@ fun HomeContent(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
+                /// discover new concertss
                 text = "Descubre nuevos conciertos",
                 color = Color(0xFF5C0F1A),
                 fontWeight = FontWeight.SemiBold,
