@@ -133,7 +133,7 @@ fun CreateConcert(
         ) {
             Spacer(Modifier.height(20.dp))
 
-            // Nombre
+            // Name
             Text(
                 "Nombre del concierto",
                 color = Color(0xFF736D6D),
@@ -159,7 +159,7 @@ fun CreateConcert(
 
             Spacer(Modifier.height(16.dp))
 
-            // Fecha dividida
+            // Date
             Text(
                 "Ingresa la fecha del concierto",
                 color = Color(0xFF736D6D),
@@ -217,7 +217,7 @@ fun CreateConcert(
 
             Spacer(Modifier.height(16.dp))
 
-            // Género con Dropdown
+            // Genre
             Text(
                 "Género",
                 color = Color(0xFF736D6D),
@@ -280,7 +280,7 @@ fun CreateConcert(
 
             Spacer(Modifier.height(16.dp))
 
-            // Descripción
+            // Description
             Text(
                 "Descripción",
                 color = Color(0xFF736D6D),
@@ -307,7 +307,7 @@ fun CreateConcert(
 
             Spacer(Modifier.height(16.dp))
 
-            // Imagen
+            // Image
             Text(
                 "Imagen",
                 color = Color(0xFF736D6D),
@@ -349,7 +349,7 @@ fun CreateConcert(
 
             Spacer(Modifier.height(16.dp))
 
-            // Plataforma con Dropdown
+            // PLatform
             Text(
                 "Plataforma",
                 color = Color(0xFF736D6D),
@@ -402,7 +402,7 @@ fun CreateConcert(
                             },
                             onClick = {
                                 platformName = platformOption
-                                // Asignar imagen automáticamente según la plataforma
+                                // Platform image
                                 platformImage = platformImages[platformOption] ?: ""
                                 platformExpanded = false
                             }
@@ -413,7 +413,7 @@ fun CreateConcert(
 
             Spacer(Modifier.height(16.dp))
 
-            // Recinto
+            // Venue
             Text(
                 "Recinto",
                 color = Color(0xFF736D6D),
@@ -439,7 +439,7 @@ fun CreateConcert(
 
             Spacer(Modifier.height(16.dp))
 
-            // Dirección del recinto
+            // Address
             Text(
                 "Dirección del recinto",
                 color = Color(0xFF736D6D),
@@ -465,7 +465,7 @@ fun CreateConcert(
 
             Spacer(Modifier.height(16.dp))
 
-            // Capacidad del recinto
+            // Cpacity
             Text(
                 "Capacidad",
                 color = Color(0xFF736D6D),
@@ -491,7 +491,7 @@ fun CreateConcert(
 
             Spacer(Modifier.height(24.dp))
 
-            // Botón Crear
+            // Create Button
             Button(
                 onClick = {
                     coroutineScope.launch {
