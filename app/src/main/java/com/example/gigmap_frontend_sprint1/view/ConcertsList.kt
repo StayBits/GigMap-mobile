@@ -1,5 +1,5 @@
 package com.example.gigmap_frontend_sprint1.view
-
+// imports
 import android.annotation.SuppressLint
 import android.webkit.WebSettings
 import androidx.compose.animation.AnimatedVisibility
