@@ -1,12 +1,11 @@
 package com.example.gigmap_frontend_sprint1.view
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Scaffold
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -24,7 +23,7 @@ import com.example.gigmap_frontend_sprint1.viewmodel.UserViewModel
 
 @Composable
 fun Home(nav: NavHostController) {
-    var selectedItem by remember { mutableStateOf(0) }
+    var selectedItem by remember { mutableIntStateOf(0) }
     val internalNav = rememberNavController()
 
     val concertVM: ConcertViewModel = viewModel()
