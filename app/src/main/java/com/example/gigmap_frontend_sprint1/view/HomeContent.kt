@@ -68,7 +68,6 @@ fun HomeContent(
         if (posts.isEmpty())    postVM.getPosts()
     }
 
-
     val userById = remember(users) { users.associateBy { it.id } }
 
     Column(
@@ -78,8 +77,6 @@ fun HomeContent(
             .verticalScroll(rememberScrollState())
             .padding(bottom = 70.dp)
     ) {
-
-
         Row(
             modifier = Modifier
                 .fillMaxWidth()
