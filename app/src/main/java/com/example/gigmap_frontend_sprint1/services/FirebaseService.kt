@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.media.RingtoneManager
 import android.os.Build
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.example.gigmap_frontend_sprint1.MainActivity
 import com.example.gigmap_frontend_sprint1.R
@@ -16,8 +17,7 @@ import com.google.firebase.messaging.RemoteMessage
 class FirebaseService : FirebaseMessagingService() {
     override fun onNewToken(token: String) {
         super.onNewToken(token)
-        println("🔥 Nuevo token FCM: $token")
-        // Aquí podrías enviar el token a tu backend
+        Log.d("FCM", "FCM Token: $token")
     }
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {

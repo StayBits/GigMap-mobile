@@ -4,30 +4,30 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.gigmap_frontend_sprint1.model.CreateDeviceTokenRequest
 import com.example.gigmap_frontend_sprint1.model.LoginRequest
 import com.example.gigmap_frontend_sprint1.model.RegisterRequest
 import com.example.gigmap_frontend_sprint1.model.Users
 import com.example.gigmap_frontend_sprint1.model.client.RetrofitClient
+import com.google.firebase.messaging.FirebaseMessaging
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlin.getValue
+
 @SuppressLint("MutableCollectionMutableState")
 class UserViewModel : ViewModel() {
     var listaUsers: ArrayList<Users> by mutableStateOf(arrayListOf())
-
     var listaArtists: ArrayList<Users> by mutableStateOf(arrayListOf())
-    var currentUser by mutableStateOf<Users?>(null)
+    var currentUserId by mutableIntStateOf(0)
     var authToken by mutableStateOf<String?>(null)
-    var errorMessage by mutableStateOf<String?>(null)
+
     fun getUsers() = viewModelScope.launch(Dispatchers.IO) {
         val r = RetrofitClient.webService.getUsers()
         withContext(Dispatchers.Main) {
@@ -84,7 +84,6 @@ class UserViewModel : ViewModel() {
         }
     }
 
-
     fun login(
         emailOrUsername: String,
         password: String,
@@ -101,15 +100,18 @@ class UserViewModel : ViewModel() {
                     if (response.isSuccessful && response.body() != null) {
                         val loginResponse = response.body()!!
                         authToken = loginResponse.token
-                        currentUser = loginResponse.user
+                        currentUserId = loginResponse.id
 
-                        val pref = context.getSharedPreferences("pref1", Context.MODE_PRIVATE)
-                        with(pref.edit()) {
-                            putString("token", loginResponse.token)
-                            putString("email", loginResponse.user?.email ?: "")
-                            putString("username", loginResponse.user?.username ?: "")
-                            putBoolean("isLogged", true)
-                            apply()
+                        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                val token = task.result ?: ""
+
+                                viewModelScope.launch(Dispatchers.IO) {
+                                    sendDeviceTokenToServer(token, currentUserId)
+                                }
+                            } else {
+                                Log.e("TOKEN", "Failed to get FCM Token", task.exception)
+                            }
                         }
 
                         Toast.makeText(context, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show()
@@ -133,7 +135,6 @@ class UserViewModel : ViewModel() {
         }
     }
 
-
     fun getArtists() = viewModelScope.launch(Dispatchers.IO) {
         try {
             val response = RetrofitClient.webService.getUsers()
@@ -155,5 +156,25 @@ class UserViewModel : ViewModel() {
         }
     }
 
+    private fun sendDeviceTokenToServer(fcmToken: String, userId: Int) {
+        if (fcmToken.isEmpty() || userId == 0) {
+            Log.w("DeviceToken", "Token FCM or UserId unavailable")
+            return
+        }
 
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val request = CreateDeviceTokenRequest(userId, fcmToken)
+                val response = RetrofitClient.webService.createDeviceToken(request)
+
+                if (response.isSuccessful) {
+                    Log.d("DeviceToken", "Token saved successfully")
+                } else {
+                    Log.e("DeviceToken", "Failed to save token: ${response.code()}")
+                }
+            } catch (e: Exception) {
+                Log.e("DeviceToken", "Exception: ${e.message}")
+            }
+        }
+    }
 }

@@ -4,6 +4,7 @@ import com.example.gigmap_frontend_sprint1.model.Community
 import com.example.gigmap_frontend_sprint1.model.ConcertCreateRequest
 
 import com.example.gigmap_frontend_sprint1.model.Concerts
+import com.example.gigmap_frontend_sprint1.model.CreateDeviceTokenRequest
 import com.example.gigmap_frontend_sprint1.model.LoginRequest
 import com.example.gigmap_frontend_sprint1.model.LoginResponse
 import com.example.gigmap_frontend_sprint1.model.Post
@@ -48,8 +49,6 @@ interface WebService {
     @GET("api/v1/concerts/genre/{genre}")
     suspend fun getConcertsByGenre(@Path("genre") genre: String): Response<List<Concerts>>
 
-
-
-
-
+    @POST("api/v1/device_tokens")
+    suspend fun createDeviceToken(@Body deviceTokenRequest: CreateDeviceTokenRequest): Response<Unit>
 }
