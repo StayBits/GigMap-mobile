@@ -49,7 +49,7 @@ import coil.compose.AsyncImage
 
 
 @Composable
-fun Communities(nav: NavHostController, viewModel: CommunityViewModel = viewModel()) {
+fun CommunitiesList(nav: NavHostController, viewModel: CommunityViewModel = viewModel()) {
     var searchQuery by remember { mutableStateOf("") }
 
     // Al entrar, cargar las comunidades del JSON
@@ -120,7 +120,7 @@ fun Communities(nav: NavHostController, viewModel: CommunityViewModel = viewMode
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // 🔹 Barra de búsqueda
+
         OutlinedTextField(
             value = searchQuery,
             onValueChange = { searchQuery = it },
@@ -140,7 +140,7 @@ fun Communities(nav: NavHostController, viewModel: CommunityViewModel = viewMode
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // 🔹 Lista de comunidades dinámicas (desde tu JSON)
+
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -155,7 +155,7 @@ fun Communities(nav: NavHostController, viewModel: CommunityViewModel = viewMode
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
-                            // Navegar a detalle de comunidad (opcional)
+                            nav.navigate("community/${community.id}")
                         },
                     shape = RoundedCornerShape(20.dp),
                     elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)

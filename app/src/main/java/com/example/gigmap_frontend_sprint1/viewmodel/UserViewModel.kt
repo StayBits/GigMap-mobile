@@ -28,6 +28,14 @@ class UserViewModel : ViewModel() {
     var currentUserId by mutableIntStateOf(0)
     var authToken by mutableStateOf<String?>(null)
 
+
+    //awar
+    fun loadUserId(context: Context) {
+        val sharedPref = context.getSharedPreferences("pref1", Context.MODE_PRIVATE)
+        currentUserId = sharedPref.getInt("userId", 0)
+    }
+
+
     fun getUsers() = viewModelScope.launch(Dispatchers.IO) {
         val r = RetrofitClient.webService.getUsers()
         withContext(Dispatchers.Main) {
@@ -113,6 +121,16 @@ class UserViewModel : ViewModel() {
                                 Log.e("TOKEN", "Failed to get FCM Token", task.exception)
                             }
                         }
+
+
+                        //renato
+                        // Guardar el userId en SharedPreferences
+                        val sharedPref = context.getSharedPreferences("pref1", Context.MODE_PRIVATE)
+                        with(sharedPref.edit()) {
+                            putInt("userId", loginResponse.id)
+                            apply()
+                        }
+
 
                         Toast.makeText(context, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show()
                         onSuccess()

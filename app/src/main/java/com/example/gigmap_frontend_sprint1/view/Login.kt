@@ -28,6 +28,7 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,6 +51,23 @@ fun Login( userViewModel: UserViewModel,
            nav: NavHostController,
            context: Context
 ){
+
+    //awar
+    LaunchedEffect(Unit) {
+        userViewModel.loadUserId(context)
+    }
+    //awar
+    LaunchedEffect(userViewModel.currentUserId) {
+        if (userViewModel.currentUserId != 0) {
+            nav.navigate("homecontent") {
+                popUpTo("login") { inclusive = true }
+            }
+        }
+    }
+
+
+
+
     val pref = context.getSharedPreferences("pref1", Context.MODE_PRIVATE)
 
     val check: Boolean = pref!!.getBoolean("chk", false)
@@ -167,6 +185,9 @@ fun Login( userViewModel: UserViewModel,
                         ) {
 
                             val editor = pref.edit()
+
+                            editor.putInt("userId", userViewModel.currentUserId)
+
                             if (chk) {
                                 editor.putString("email", txtEmail)
                                 editor.putString("pass", txtPass)
@@ -233,6 +254,8 @@ fun Login( userViewModel: UserViewModel,
                 }
             )
         }
+
+
     }
 
 }

@@ -8,6 +8,7 @@ import com.example.gigmap_frontend_sprint1.model.CreateDeviceTokenRequest
 import com.example.gigmap_frontend_sprint1.model.LoginRequest
 import com.example.gigmap_frontend_sprint1.model.LoginResponse
 import com.example.gigmap_frontend_sprint1.model.Post
+import com.example.gigmap_frontend_sprint1.model.PostCreateRequest
 import com.example.gigmap_frontend_sprint1.model.RegisterRequest
 import com.example.gigmap_frontend_sprint1.model.RelatedEvent
 import com.example.gigmap_frontend_sprint1.model.Users
@@ -17,6 +18,7 @@ import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface WebService {
 
@@ -42,6 +44,24 @@ interface WebService {
 
     @GET("api/v1/posts")
     suspend fun getPosts(): Response<List<Post>>
+
+
+    @POST("api/v1/posts")
+    suspend fun createPost(@Body postRequest: PostCreateRequest): Response<Post>
+
+    @POST("api/v1/posts/{postId}/like")
+    suspend fun likePost(
+        @Path("postId") postId: Long,
+        @Query("userId") userId: Long
+    ): Response<Void>
+
+    @DELETE("api/v1/posts/{postId}/unlike")
+    suspend fun unlikePost(
+        @Path("postId") postId: Long,
+        @Query("userId") userId: Long
+    ): Response<Void>
+
+
 
     @GET("api/v1/relatedEvents")
     suspend fun getRelatedEvents(): Response<List<RelatedEvent>>

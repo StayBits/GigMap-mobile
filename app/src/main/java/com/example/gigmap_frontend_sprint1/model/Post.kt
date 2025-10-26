@@ -5,6 +5,6 @@ data class Post(
     val communityId: Int,
     val userId: Int,
     val content: String,
-    val image: String,
-    val likes: List<Int>
+    val image: String?,
+    val likes: List<Int> = emptyList()
 )

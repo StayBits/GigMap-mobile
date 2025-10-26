@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -17,6 +18,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.gigmap_frontend_sprint1.components.BottomBar
 import com.example.gigmap_frontend_sprint1.components.TopBar
+import com.example.gigmap_frontend_sprint1.viewmodel.CommunityViewModel
 import com.example.gigmap_frontend_sprint1.viewmodel.ConcertViewModel
 import com.example.gigmap_frontend_sprint1.viewmodel.PostViewModel
 import com.example.gigmap_frontend_sprint1.viewmodel.UserViewModel
@@ -29,6 +31,22 @@ fun Home(nav: NavHostController) {
     val concertVM: ConcertViewModel = viewModel()
     val userVM: UserViewModel = viewModel()
     val postVM: PostViewModel = viewModel()
+    val communityVm: CommunityViewModel = viewModel()
+
+
+
+    //awar
+    val context = LocalContext.current
+
+    //awar
+
+    LaunchedEffect(Unit) {
+        userVM.loadUserId(context)
+    }
+
+
+
+
 
     Scaffold(
         topBar = {
@@ -93,11 +111,65 @@ fun Home(nav: NavHostController) {
                                 userVM = userVM
                             )
                         }
+
+
+
                     }
                 }
                 1 -> Map(nav)
-                2 -> Communities(nav)
-                3 -> Profile(nav)
+
+                //awar
+                2 -> {
+
+                    NavHost(
+                        navController = internalNav,
+                        startDestination = "communitiesList"
+                    ) {
+                        composable("communitiesList") {
+                            CommunitiesList(nav = internalNav)
+                        }
+
+                        composable(
+                            route = "community/{communityId}",
+                            arguments = listOf(navArgument("communityId") { type = NavType.IntType })
+                        ) { backStackEntry ->
+                            val communityId = backStackEntry.arguments?.getInt("communityId") ?: 0
+                            Community(
+                                navController = internalNav,
+                                communityId = communityId,
+                                userVm = userVM,
+                                postVm = postVM,
+                                communityVm = communityVm
+
+                            )
+                        }
+
+                        composable(
+                            route = "createPost/{communityId}",
+                            arguments = listOf(navArgument("communityId") { type = NavType.IntType })
+                        ) { backStackEntry ->
+                            val communityId = backStackEntry.arguments?.getInt("communityId") ?: 0
+                            CreatePost(
+                                navController = internalNav,
+                                communityId = communityId,
+                                postVM = postVM,
+                                userVM = userVM
+                            )
+                        }
+                    }
+                }
+
+                //awar
+                3 -> Profile(
+                    nav = nav,
+                    userVM = userVM,
+                    context = LocalContext.current
+                )
+
+                // dentro de Home(...) en el when(selectedItem)
+
+
+
             }
         }
     }
