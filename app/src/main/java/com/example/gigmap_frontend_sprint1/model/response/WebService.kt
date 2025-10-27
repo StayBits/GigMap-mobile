@@ -1,17 +1,17 @@
 package com.example.gigmap_frontend_sprint1.model.response
 
-import com.example.gigmap_frontend_sprint1.communities.model.Community
-import com.example.gigmap_frontend_sprint1.concerts.model.ConcertCreateRequest
+import com.example.gigmap_frontend_sprint1.model.Community
+import com.example.gigmap_frontend_sprint1.model.ConcertCreateRequest
 
-import com.example.gigmap_frontend_sprint1.concerts.model.Concerts
-import com.example.gigmap_frontend_sprint1.shared.model.CreateDeviceTokenRequest
-import com.example.gigmap_frontend_sprint1.users.model.LoginRequest
-import com.example.gigmap_frontend_sprint1.users.model.LoginResponse
-import com.example.gigmap_frontend_sprint1.communities.model.Post
-import com.example.gigmap_frontend_sprint1.communities.model.PostCreateRequest
-import com.example.gigmap_frontend_sprint1.users.model.RegisterRequest
-import com.example.gigmap_frontend_sprint1.related_events.model.RelatedEvent
-import com.example.gigmap_frontend_sprint1.users.model.Users
+import com.example.gigmap_frontend_sprint1.model.Concerts
+import com.example.gigmap_frontend_sprint1.model.CreateDeviceTokenRequest
+import com.example.gigmap_frontend_sprint1.model.LoginRequest
+import com.example.gigmap_frontend_sprint1.model.LoginResponse
+import com.example.gigmap_frontend_sprint1.model.Post
+import com.example.gigmap_frontend_sprint1.model.PostCreateRequest
+import com.example.gigmap_frontend_sprint1.model.RegisterRequest
+import com.example.gigmap_frontend_sprint1.model.RelatedEvent
+import com.example.gigmap_frontend_sprint1.model.Users
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE

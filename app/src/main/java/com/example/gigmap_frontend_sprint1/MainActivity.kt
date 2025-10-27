@@ -5,19 +5,15 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import com.example.gigmap_frontend_sprint1.shared.ui.theme.Gigmap_frontend_sprint1Theme
-import com.example.gigmap_frontend_sprint1.shared.nav.Navi
-import com.example.gigmap_frontend_sprint1.communities.viewmodel.CommunityViewModel
-import com.example.gigmap_frontend_sprint1.concerts.viewmodel.ConcertViewModel
-import com.example.gigmap_frontend_sprint1.communities.viewmodel.PostViewModel
-import com.example.gigmap_frontend_sprint1.users.viewmodel.UserViewModel
+import com.example.gigmap_frontend_sprint1.ui.theme.Gigmap_frontend_sprint1Theme
+import com.example.gigmap_frontend_sprint1.view.nav.Navi
+import com.example.gigmap_frontend_sprint1.viewmodel.CommunityViewModel
+import com.example.gigmap_frontend_sprint1.viewmodel.ConcertViewModel
+import com.example.gigmap_frontend_sprint1.viewmodel.PostViewModel
+import com.example.gigmap_frontend_sprint1.viewmodel.UserViewModel
 import com.google.firebase.FirebaseApp
 import kotlin.getValue
 
-/**
- * MainActivity es la actividad principal de la aplicación GigMap.
- * Inicializa Firebase y configura la interfaz de usuario con el tema y la navegación.
- */
 class MainActivity : ComponentActivity() {
     val concertViewModel by viewModels<ConcertViewModel>()
     val postViewModel by viewModels<PostViewModel>()

@@ -1,4 +1,4 @@
-package com.example.gigmap_frontend_sprint1.users.viewmodel
+package com.example.gigmap_frontend_sprint1.viewmodel
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -10,10 +10,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.gigmap_frontend_sprint1.shared.model.CreateDeviceTokenRequest
-import com.example.gigmap_frontend_sprint1.users.model.LoginRequest
-import com.example.gigmap_frontend_sprint1.users.model.RegisterRequest
-import com.example.gigmap_frontend_sprint1.users.model.Users
+import com.example.gigmap_frontend_sprint1.model.CreateDeviceTokenRequest
+import com.example.gigmap_frontend_sprint1.model.LoginRequest
+import com.example.gigmap_frontend_sprint1.model.RegisterRequest
+import com.example.gigmap_frontend_sprint1.model.Users
 import com.example.gigmap_frontend_sprint1.model.client.RetrofitClient
 import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.CoroutineScope

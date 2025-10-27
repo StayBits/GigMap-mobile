@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.example.gigmap_frontend_sprint1.concerts.view
+package com.example.gigmap_frontend_sprint1.view
 //imports
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -22,12 +22,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.gigmap_frontend_sprint1.concerts.model.ConcertCreateRequest
-import com.example.gigmap_frontend_sprint1.shared.model.PlatformRequest
-import com.example.gigmap_frontend_sprint1.concerts.model.VenueRequest
-import com.example.gigmap_frontend_sprint1.shared.services.CloudinaryService
-import com.example.gigmap_frontend_sprint1.shared.services.GoogleMapsService
-import com.example.gigmap_frontend_sprint1.concerts.viewmodel.ConcertViewModel
+import com.example.gigmap_frontend_sprint1.model.ConcertCreateRequest
+import com.example.gigmap_frontend_sprint1.model.PlatformRequest
+import com.example.gigmap_frontend_sprint1.model.VenueRequest
+import com.example.gigmap_frontend_sprint1.services.CloudinaryService
+import com.example.gigmap_frontend_sprint1.services.GoogleMapsService
+import com.example.gigmap_frontend_sprint1.viewmodel.ConcertViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
