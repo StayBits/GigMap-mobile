@@ -1,4 +1,4 @@
-package com.example.gigmap_frontend_sprint1.view.nav
+package com.example.gigmap_frontend_sprint1.shared.nav
 
 import android.content.Context
 import androidx.compose.runtime.Composable
@@ -9,20 +9,20 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.gigmap_frontend_sprint1.view.Community
-import com.example.gigmap_frontend_sprint1.view.ConcertDetails
+import com.example.gigmap_frontend_sprint1.communities.view.Community
+import com.example.gigmap_frontend_sprint1.concerts.view.ConcertDetails
 
-import com.example.gigmap_frontend_sprint1.view.ConcertsList
-import com.example.gigmap_frontend_sprint1.view.CreateConcert
-import com.example.gigmap_frontend_sprint1.view.CreatePost
-import com.example.gigmap_frontend_sprint1.view.Login
-import com.example.gigmap_frontend_sprint1.view.SignIn
-import com.example.gigmap_frontend_sprint1.view.Welcome
-import com.example.gigmap_frontend_sprint1.view.Home
-import com.example.gigmap_frontend_sprint1.viewmodel.CommunityViewModel
-import com.example.gigmap_frontend_sprint1.viewmodel.ConcertViewModel
-import com.example.gigmap_frontend_sprint1.viewmodel.PostViewModel
-import com.example.gigmap_frontend_sprint1.viewmodel.UserViewModel
+import com.example.gigmap_frontend_sprint1.concerts.view.ConcertsList
+import com.example.gigmap_frontend_sprint1.concerts.view.CreateConcert
+import com.example.gigmap_frontend_sprint1.communities.view.CreatePost
+import com.example.gigmap_frontend_sprint1.users.view.Login
+import com.example.gigmap_frontend_sprint1.users.view.SignIn
+import com.example.gigmap_frontend_sprint1.public.Welcome
+import com.example.gigmap_frontend_sprint1.public.Home
+import com.example.gigmap_frontend_sprint1.communities.viewmodel.CommunityViewModel
+import com.example.gigmap_frontend_sprint1.concerts.viewmodel.ConcertViewModel
+import com.example.gigmap_frontend_sprint1.communities.viewmodel.PostViewModel
+import com.example.gigmap_frontend_sprint1.users.viewmodel.UserViewModel
 @Composable
 fun Navi(
     userViewModel: UserViewModel,

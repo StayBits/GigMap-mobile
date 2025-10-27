@@ -1,5 +1,5 @@
 // CommunityScreen.kt (corregido para mantener la barra de Gigmap)
-package com.example.gigmap_frontend_sprint1.view
+package com.example.gigmap_frontend_sprint1.communities.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -28,10 +28,10 @@ import androidx.navigation.NavHostController
 
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
-import com.example.gigmap_frontend_sprint1.model.Post
-import com.example.gigmap_frontend_sprint1.viewmodel.CommunityViewModel
-import com.example.gigmap_frontend_sprint1.viewmodel.PostViewModel
-import com.example.gigmap_frontend_sprint1.viewmodel.UserViewModel
+import com.example.gigmap_frontend_sprint1.communities.model.Post
+import com.example.gigmap_frontend_sprint1.communities.viewmodel.CommunityViewModel
+import com.example.gigmap_frontend_sprint1.communities.viewmodel.PostViewModel
+import com.example.gigmap_frontend_sprint1.users.viewmodel.UserViewModel
 
 
 
