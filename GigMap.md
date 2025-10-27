@@ -1,8 +1,6 @@
-# Reorganización en Bounded Contexts - GigMap Mobile
+#  GigMap Mobile
 
-## Estructura Final
-
-```
+## Estructura 
 gigmap_frontend_sprint1/
 ├── MainActivity.kt
 ├── app/ (vacío)
@@ -85,7 +83,7 @@ gigmap_frontend_sprint1/
             └── PlatformViewModel.kt
 ```
 
-## Bounded Contexts Definidos
+## Bounded Definidos
 
 ### 1. **Concerts**
 - **Responsabilidad**: Gestión de conciertos y venues
@@ -117,46 +115,3 @@ gigmap_frontend_sprint1/
 - **Incluye**: Componentes UI, servicios, cliente HTTP, temas
 - **Razón**: Infraestructura común reutilizable
 
-## Cambios Realizados
-
-### Packages Actualizados
-- `com.example.gigmap_frontend_sprint1.model` → `com.example.gigmap_frontend_sprint1.bounded.[context].model`
-- `com.example.gigmap_frontend_sprint1.viewmodel` → `com.example.gigmap_frontend_sprint1.bounded.[context].viewmodel`
-- `com.example.gigmap_frontend_sprint1.view` → `com.example.gigmap_frontend_sprint1.bounded.[context].view`
-- `com.example.gigmap_frontend_sprint1.components` → `com.example.gigmap_frontend_sprint1.bounded.shared.components`
-- `com.example.gigmap_frontend_sprint1.services` → `com.example.gigmap_frontend_sprint1.bounded.shared.services`
-- `com.example.gigmap_frontend_sprint1.ui.theme` → `com.example.gigmap_frontend_sprint1.bounded.shared.ui.theme`
-
-### Imports Actualizados
-Todos los imports en todos los archivos fueron actualizados automáticamente para reflejar la nueva estructura de bounded contexts.
-
-### Archivos Eliminados
-- `/model` (antigua estructura)
-- `/viewmodel` (antigua estructura)
-- `/view` (antigua estructura)
-- `/components` (antigua estructura)
-- `/services` (antigua estructura)
-- `/ui` (antigua estructura)
-
-## Ventajas de esta Organización
-
-1. **Separación de Responsabilidades**: Cada bounded context tiene una responsabilidad clara
-2. **Escalabilidad**: Fácil agregar nuevos bounded contexts sin afectar los existentes
-3. **Mantenibilidad**: Código más organizado y fácil de navegar
-4. **Cohesión**: Elementos relacionados están juntos
-5. **Bajo Acoplamiento**: Los bounded contexts son independientes entre sí
-
-## Notas Importantes
-
-- **MainActivity.kt** fue actualizado con los nuevos imports
-- **WebService.kt** en shared/client contiene todas las interfaces de API
-- **RetrofitClient.kt** en shared/client maneja la configuración HTTP
-- Todos los imports fueron verificados y actualizados correctamente
-- La funcionalidad del código se mantiene exactamente igual, solo cambió la organización
-
-## Próximos Pasos Recomendados
-
-1. Compilar el proyecto para verificar que no hay errores
-2. Ejecutar tests si los hay
-3. Considerar agregar README.md en cada bounded context explicando su responsabilidad
-4. Evaluar si RelatedEvents necesita más componentes (viewmodel, views)
