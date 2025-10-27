@@ -28,6 +28,7 @@ import com.example.gigmap_frontend_sprint1.bounded.concerts.model.VenueRequest
 import com.example.gigmap_frontend_sprint1.bounded.shared.services.CloudinaryService
 import com.example.gigmap_frontend_sprint1.bounded.shared.services.GoogleMapsService
 import com.example.gigmap_frontend_sprint1.bounded.concerts.viewmodel.ConcertViewModel
+import com.example.gigmap_frontend_sprint1.bounded.shared.components.InterFontFamily
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

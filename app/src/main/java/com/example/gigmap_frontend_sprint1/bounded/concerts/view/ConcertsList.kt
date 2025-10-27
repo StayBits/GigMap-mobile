@@ -32,6 +32,7 @@ import androidx.navigation.NavHostController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.example.gigmap_frontend_sprint1.bounded.concerts.viewmodel.ConcertViewModel
+import com.example.gigmap_frontend_sprint1.bounded.shared.components.InterFontFamily
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalGlideComposeApi::class)

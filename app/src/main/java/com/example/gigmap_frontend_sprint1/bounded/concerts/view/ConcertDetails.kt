@@ -25,6 +25,7 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.example.gigmap_frontend_sprint1.bounded.concerts.viewmodel.ConcertViewModel
 import com.example.gigmap_frontend_sprint1.bounded.concerts.model.Concerts
+import com.example.gigmap_frontend_sprint1.bounded.shared.components.InterFontFamily
 import com.example.gigmap_frontend_sprint1.bounded.users.viewmodel.UserViewModel
 
 val BurgundyDark = Color(0xFF5C0F1A)
