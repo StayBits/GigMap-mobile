@@ -5,12 +5,12 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import com.example.gigmap_frontend_sprint1.bounded.shared.ui.theme.Gigmap_frontend_sprint1Theme
-import com.example.gigmap_frontend_sprint1.bounded.public.view.nav.Navi
-import com.example.gigmap_frontend_sprint1.bounded.communities.viewmodel.CommunityViewModel
-import com.example.gigmap_frontend_sprint1.bounded.concerts.viewmodel.ConcertViewModel
-import com.example.gigmap_frontend_sprint1.bounded.communities.viewmodel.PostViewModel
-import com.example.gigmap_frontend_sprint1.bounded.users.viewmodel.UserViewModel
+import com.example.gigmap_frontend_sprint1.ui.theme.Gigmap_frontend_sprint1Theme
+import com.example.gigmap_frontend_sprint1.view.nav.Navi
+import com.example.gigmap_frontend_sprint1.viewmodel.CommunityViewModel
+import com.example.gigmap_frontend_sprint1.viewmodel.ConcertViewModel
+import com.example.gigmap_frontend_sprint1.viewmodel.PostViewModel
+import com.example.gigmap_frontend_sprint1.viewmodel.UserViewModel
 import com.google.firebase.FirebaseApp
 import kotlin.getValue
 
