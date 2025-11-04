@@ -106,7 +106,7 @@ fun CommunitiesList(nav: NavHostController, viewModel: CommunityViewModel = view
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
                             .size(55.dp)
-                            .clip(CircleShape)
+                            .clip(CircleShape) 
                     )
                     Text(
                         community.name.uppercase(),
