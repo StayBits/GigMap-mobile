@@ -86,4 +86,49 @@ class CommunityViewModel : ViewModel() {
         }
     }
 
+
+    // dentro de CommunityViewModel
+
+    fun createCommunity(
+        name: String,
+        image: String,
+        description: String,
+        onResult: (success: Boolean, created: Community?) -> Unit
+    ) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                // construir un objeto Community para el POST
+                // usamos id = 0 (backend debe asignar el id real)
+                val newComm = Community(
+                    id = 0,
+                    name = name,
+                    image = image,
+                    description = description,
+                    posts = listOf(),
+                    members = listOf()
+                )
+
+                val resp: Response<Community> = RetrofitClient.webService.createCommunity(newComm)
+                withContext(Dispatchers.Main) {
+                    if (resp.isSuccessful && resp.body() != null) {
+                        val created = resp.body()!!
+                        // agregar a la lista local (al inicio)
+                        val updated = ArrayList<Community>()
+                        updated.addAll(listOf(created))
+                        updated.addAll(listaCommunities)
+                        listaCommunities = updated
+                        onResult(true, created)
+                    } else {
+                        onResult(false, null)
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    onResult(false, null)
+                }
+            }
+        }
+    }
+
+
 }

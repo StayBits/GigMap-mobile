@@ -232,6 +232,29 @@ class UserViewModel : ViewModel() {
             }
         }
     }
+    fun getUserById(userId: Int, onResult: (Users?) -> Unit) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                Log.d("USER_DEBUG", "Llamando a getUserById con ID = $userId")
+                val response = RetrofitClient.webService.getUserById(userId.toLong())
+                Log.d("USER_DEBUG", "Código respuesta: ${response.code()}")
+                withContext(Dispatchers.Main) {
+                    if (response.isSuccessful && response.body() != null) {
+                        onResult(response.body())
+                    } else {
+                        Log.e("USER_DEBUG", "Error body: ${response.errorBody()?.string()}")
+                        onResult(null)
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("USER_DEBUG", "Excepción: ${e.message}")
+                e.printStackTrace()
+                withContext(Dispatchers.Main) { onResult(null) }
+            }
+        }
+    }
+
+
 
 
 

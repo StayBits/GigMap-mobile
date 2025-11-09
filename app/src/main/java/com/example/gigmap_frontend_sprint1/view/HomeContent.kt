@@ -2,6 +2,7 @@ package com.example.gigmap_frontend_sprint1.view
 // imports
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -167,7 +168,7 @@ fun HomeContent(
                 contentPadding = PaddingValues(horizontal = 20.dp)
             ) {
                 items(artists) { artist ->
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally,) {
                         GlideImage(
                             model = artist.image,
                             contentDescription = artist.name,
@@ -176,6 +177,7 @@ fun HomeContent(
                                 .size(80.dp)
                                 .clip(CircleShape)
                                 .border(2.dp, Color(0xFF5C0F1A), CircleShape)
+                                .clickable { nav.navigate("user/${artist.id}") }
                         )
                         Text(
                             text = artist.username,
@@ -220,8 +222,11 @@ fun HomeContent(
                                 modifier = Modifier
                                     .size(40.dp)
                                     .clip(CircleShape)
+                                    .clickable { nav.navigate("user/${author?.id}") }
                                     .border(1.dp, Color(0xFF5C0F1A), CircleShape),
+
                                 contentScale = ContentScale.Crop
+
                             )
                             Spacer(Modifier.width(10.dp))
                             Column {

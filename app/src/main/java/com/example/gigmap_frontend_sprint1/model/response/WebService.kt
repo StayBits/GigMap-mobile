@@ -1,5 +1,6 @@
 package com.example.gigmap_frontend_sprint1.model.response
 
+import com.example.gigmap_frontend_sprint1.model.AttendeeRequest
 import com.example.gigmap_frontend_sprint1.model.Community
 import com.example.gigmap_frontend_sprint1.model.ConcertCreateRequest
 
@@ -17,6 +18,7 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.HTTP
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
@@ -35,6 +37,18 @@ interface WebService {
     @POST("api/v1/concerts")
     suspend fun createConcert(@Body concert: ConcertCreateRequest): Response<Concerts>
 
+
+    // en tu interface Retrofit (ej: WebService.kt)
+// ConcertService.kt
+// ConcertService.kt
+    @POST("api/v1/concerts/attendees")
+    suspend fun addAttendee(@Body request: AttendeeRequest): Response<Void>
+
+    @HTTP(method = "DELETE", path = "api/v1/concerts/attendees", hasBody = true)
+    suspend fun removeAttendee(@Body request: AttendeeRequest): Response<Void>
+
+
+
     @GET("api/v1/users")
     suspend fun getUsers(): Response<List<Users>>
 
@@ -42,6 +56,11 @@ interface WebService {
     suspend fun updateUser(
         @Path("userId") userId: Long,
         @Body request: UserEditRequest
+    ): Response<Users>
+
+    @GET("api/v1/users/{userId}")
+    suspend fun getUserById(
+        @Path("userId") userId: Long
     ): Response<Users>
 
     @GET("api/v1/communities")

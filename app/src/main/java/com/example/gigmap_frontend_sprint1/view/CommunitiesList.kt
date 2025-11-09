@@ -83,7 +83,7 @@ fun CommunitiesList(nav: NavHostController, viewModel: CommunityViewModel = view
                             .clip(CircleShape)
                             .background(Color(0xFF5C0F1A))
                             .clickable {
-                                // luego navegas a tu pantalla de creación
+                                nav.navigate("createCommunity")
                             },
                         contentAlignment = Alignment.Center
                     ) {

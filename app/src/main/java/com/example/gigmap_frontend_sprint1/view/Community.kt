@@ -265,7 +265,9 @@ fun Community(
                     val author = userById[post.userId]
 
                     PostCard(
+                        nav= navController,
                         post = post,
+                        authorId = author?.id,
                         authorName = author?.name,
                         authorImage = author?.image,
                         postVm = postVm,
@@ -282,7 +284,9 @@ fun Community(
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun PostCard(
+    nav: NavHostController,
     post: Post,
+    authorId: Int?=null,
     authorName: String? = null,
     authorImage: String? = null,
     postVm: PostViewModel,
@@ -302,9 +306,11 @@ fun PostCard(
                     GlideImage(
                         model = authorImage,
                         contentDescription = authorName ?: "Avatar",
+
                         modifier = Modifier
                             .size(40.dp)
                             .clip(CircleShape)
+                            .clickable { nav.navigate("user/${authorId}") }
                             .border(1.dp, Color(0xFF5C0F1A), CircleShape),
                         contentScale = ContentScale.Crop
                     )

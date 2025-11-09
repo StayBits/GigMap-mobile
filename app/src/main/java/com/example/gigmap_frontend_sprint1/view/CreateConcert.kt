@@ -21,6 +21,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.gigmap_frontend_sprint1.model.ConcertCreateRequest
 import com.example.gigmap_frontend_sprint1.model.PlatformRequest
@@ -28,6 +29,7 @@ import com.example.gigmap_frontend_sprint1.model.VenueRequest
 import com.example.gigmap_frontend_sprint1.services.CloudinaryService
 import com.example.gigmap_frontend_sprint1.services.GoogleMapsService
 import com.example.gigmap_frontend_sprint1.viewmodel.ConcertViewModel
+import com.example.gigmap_frontend_sprint1.viewmodel.UserViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -38,8 +40,12 @@ import java.io.FileOutputStream
 fun CreateConcert(
     navController: NavHostController,
     concertVM: ConcertViewModel,
-    userId: Int = 2
+    userVM: UserViewModel
+
 ) {
+
+    val userId = userVM.currentUserId // entero guardado en el ViewModel
+
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     var genre by remember { mutableStateOf("") }

@@ -49,11 +49,21 @@ fun ConcertDetails(
         }
         return
     }
+    val currentUserId = userVM.currentUserId
 
     val relatedConcerts = emptyList<Concerts>()
 
     val users = userVM.listaUsers
     val confirmedAttendees = concertVM.getConfirmedUsers(concert, users)
+
+
+    var isConfirmed by remember { mutableStateOf(false) }
+
+    // Inicializa estado desde concert.attendees
+    LaunchedEffect(concert.attendees, currentUserId) {
+        isConfirmed = currentUserId?.let { id -> concert.attendees.contains(id) } ?: false
+    }
+
 
     LaunchedEffect(Unit) {
         if (userVM.listaUsers.isEmpty()) {
@@ -180,36 +190,43 @@ fun ConcertDetails(
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Button(
-                onClick = { },
+                onClick = {
+                    if (currentUserId == null) return@Button // no logueado
+
+                    val concertIdLong = concertId.toLong()
+                    val userIdLong = currentUserId.toLong()
+
+                    if (!isConfirmed) {
+                        isConfirmed = true
+                        concertVM.addAttendeeToConcert(concertIdLong, userIdLong) { success ->
+                            if (!success) isConfirmed = false
+                        }
+                    } else {
+                        isConfirmed = false
+                        concertVM.removeAttendeeFromConcert(concertIdLong, userIdLong) { success ->
+                            if (!success) isConfirmed = true
+                        }
+                    }
+                },
+                enabled = currentUserId != null,
                 modifier = Modifier.weight(1f),
-                colors = ButtonDefaults.buttonColors(containerColor = BurgundyDark),
+                colors = ButtonDefaults.buttonColors(containerColor = if (!isConfirmed) BurgundyDark else Color(0xFFB00020)),
                 shape = RoundedCornerShape(8.dp),
                 contentPadding = PaddingValues(vertical = 12.dp)
             ) {
-                Text(
-                    text = "Confirmar asistencia",
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    fontFamily = InterFontFamily
-                )
+                Text(text = if (!isConfirmed) "Confirmar asistencia" else "Cancelar confirmación", fontSize = 13.sp, fontWeight = FontWeight.SemiBold, fontFamily = InterFontFamily)
             }
 
             Button(
-                onClick = { },
+                onClick = { /* tickets */ },
                 modifier = Modifier.weight(1f),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2C2C2C)),
                 shape = RoundedCornerShape(8.dp),
                 contentPadding = PaddingValues(vertical = 12.dp)
             ) {
-                Text(
-                    text = "Tickets",
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    fontFamily = InterFontFamily,
-                )
+                Text(text = "Tickets", fontSize = 13.sp, fontWeight = FontWeight.SemiBold, fontFamily = InterFontFamily)
             }
         }
-
         Spacer(modifier = Modifier.height(20.dp))
 
         Card(

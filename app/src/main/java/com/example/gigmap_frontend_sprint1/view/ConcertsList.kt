@@ -28,22 +28,28 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.example.gigmap_frontend_sprint1.viewmodel.ConcertViewModel
+import com.example.gigmap_frontend_sprint1.viewmodel.UserViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalGlideComposeApi::class)
 @Composable
 fun ConcertsList(
     navController: NavHostController,
-    concertVM: ConcertViewModel
+    concertVM: ConcertViewModel,
+    userVm: UserViewModel = viewModel()
 ) {
     val concerts = concertVM.listaConcerts
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val selectedGenres = remember { mutableStateListOf<String>() }
+
+    val currentUser = userVm.listaUsers.find { it.id == userVm.currentUserId }
+
 
     LaunchedEffect(concerts.isEmpty()) {
         if (concerts.isEmpty()) concertVM.getConcerts()
@@ -164,13 +170,15 @@ fun ConcertsList(
         // 🎶 Contenido principal
         Scaffold(
             floatingActionButton = {
-                FloatingActionButton(
-                    onClick = { navController.navigate("createConcert") },
-                    containerColor = Color(0xFF5C0F1A),
-                    contentColor = Color.White,
-                    shape = RoundedCornerShape(50)
-                ) {
-                    Icon(Icons.Default.Add, contentDescription = "Crear concierto")
+                if (currentUser?.role == "ARTIST") {
+                    FloatingActionButton(
+                        onClick = { navController.navigate("createConcert") },
+                        containerColor = Color(0xFF5C0F1A),
+                        contentColor = Color.White,
+                        shape = RoundedCornerShape(50)
+                    ) {
+                        Icon(Icons.Default.Add, contentDescription = "Crear concierto")
+                    }
                 }
             },
             topBar = {

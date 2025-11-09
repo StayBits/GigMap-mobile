@@ -87,6 +87,26 @@ fun Home(nav: NavHostController) {
                                 postVM = postVM
                             )
                         }
+
+
+                        composable(
+                            route = "user/{userId}",
+                            arguments = listOf(navArgument("userId") { type = NavType.IntType })
+                        ) { backStackEntry ->
+                            val userId = backStackEntry.arguments?.getInt("userId") ?: 0
+
+                            Profile(
+                                rootNav = nav,          // el nav raíz para cerrar sesión etc
+                                innerNav = internalNav, // para navegación dentro de perfil
+                                userVM = userVM,
+                                concertVM = concertVM,
+                                postVM = postVM,
+                                viewedUserId = userId,// <- ESTO ES LO IMPORTANTE
+                                context = LocalContext.current
+                            )
+                        }
+
+
                         composable("concertsList") {
                             ConcertsList(
                                 internalNav,
@@ -96,7 +116,8 @@ fun Home(nav: NavHostController) {
                         composable("createConcert") {
                             CreateConcert(
                                 internalNav,
-                                concertVM = concertVM
+                                concertVM = concertVM,
+                                userVM = userVM
                             )
                         }
                         composable(
@@ -129,6 +150,24 @@ fun Home(nav: NavHostController) {
                             CommunitiesList(nav = internalNav)
                         }
 
+
+                        composable(
+                            route = "user/{userId}",
+                            arguments = listOf(navArgument("userId") { type = NavType.IntType })
+                        ) { backStackEntry ->
+                            val userId = backStackEntry.arguments?.getInt("userId") ?: 0
+
+                            Profile(
+                                rootNav = nav,          // el nav raíz para cerrar sesión etc
+                                innerNav = internalNav, // para navegación dentro de perfil
+                                userVM = userVM,
+                                concertVM = concertVM,
+                                postVM = postVM,
+                                viewedUserId = userId,// <- ESTO ES LO IMPORTANTE
+                                context = LocalContext.current
+                            )
+                        }
+
                         composable(
                             route = "community/{communityId}",
                             arguments = listOf(navArgument("communityId") { type = NavType.IntType })
@@ -143,6 +182,16 @@ fun Home(nav: NavHostController) {
 
                             )
                         }
+
+                        // dentro del NavHost de communities (añadir junto a los otros composable)
+                        composable("createCommunity") {
+                            // pasar el mismo viewModel que creaste arriba en Home (communityVm)
+                            CreateCommunity(
+                                nav = internalNav,
+                                viewModel = communityVm
+                            )
+                        }
+
 
                         composable(
                             route = "createPost/{communityId}",
@@ -177,6 +226,21 @@ fun Home(nav: NavHostController) {
                                 context = LocalContext.current
                             )
                         }
+
+                        composable(
+                            route = "concert/{concertId}",
+                            arguments = listOf(navArgument("concertId") { type = NavType.IntType })
+                        ) { backStackEntry ->
+                            val concertId = backStackEntry.arguments?.getInt("concertId") ?: 0
+                            ConcertDetails(
+                                navController = internalNav,
+                                concertId = concertId,
+                                concertVM = concertVM,
+                                userVM = userVM
+                            )
+                        }
+
+
                         composable("editProfile") {
 
                             EditProfile(

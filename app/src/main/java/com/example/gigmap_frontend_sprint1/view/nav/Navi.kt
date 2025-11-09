@@ -19,6 +19,7 @@ import com.example.gigmap_frontend_sprint1.view.Login
 import com.example.gigmap_frontend_sprint1.view.SignIn
 import com.example.gigmap_frontend_sprint1.view.Welcome
 import com.example.gigmap_frontend_sprint1.view.Home
+import com.example.gigmap_frontend_sprint1.view.UserView
 import com.example.gigmap_frontend_sprint1.viewmodel.CommunityViewModel
 import com.example.gigmap_frontend_sprint1.viewmodel.ConcertViewModel
 import com.example.gigmap_frontend_sprint1.viewmodel.PostViewModel
@@ -63,7 +64,7 @@ fun Navi(
         }
 
         composable("createConcert") {
-            CreateConcert(navController = navController, concertVM = concertViewModel)
+            CreateConcert(navController = navController, concertVM = concertViewModel, userVM = userViewModel )
         }
 
 
@@ -79,6 +80,17 @@ fun Navi(
                 userVM = userViewModel
             )
         }
+
+        // user
+
+        composable(
+            route = "user/{userId}",
+            arguments = listOf(navArgument("userId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val userId = backStackEntry.arguments?.getInt("userId") ?: 0
+            UserView(userId = userId, userViewModel = userViewModel)
+        }
+
 
         /*
         // importa NavType si no lo tienes: ya lo usas arriba
