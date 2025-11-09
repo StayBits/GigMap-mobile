@@ -110,7 +110,9 @@ fun Home(nav: NavHostController) {
                         composable("concertsList") {
                             ConcertsList(
                                 internalNav,
-                                concertVM = concertVM
+                                concertVM = concertVM,
+                                userVm = userVM
+
                             )
                         }
                         composable("createConcert") {
