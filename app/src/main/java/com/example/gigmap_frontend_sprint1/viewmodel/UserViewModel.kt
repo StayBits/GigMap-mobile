@@ -16,6 +16,7 @@ import com.example.gigmap_frontend_sprint1.model.RegisterRequest
 import com.example.gigmap_frontend_sprint1.model.UserEditRequest
 import com.example.gigmap_frontend_sprint1.model.Users
 import com.example.gigmap_frontend_sprint1.model.client.RetrofitClient
+import com.example.gigmap_frontend_sprint1.model.client.TokenManager
 import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -109,6 +110,7 @@ class UserViewModel : ViewModel() {
                     if (response.isSuccessful && response.body() != null) {
                         val loginResponse = response.body()!!
                         authToken = loginResponse.token
+                        TokenManager.token = loginResponse.token
                         currentUserId = loginResponse.id
 
                         FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
