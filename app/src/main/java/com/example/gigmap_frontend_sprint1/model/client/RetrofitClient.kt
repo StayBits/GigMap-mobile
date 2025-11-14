@@ -26,6 +26,7 @@ object RetrofitClient {
     val webService: WebService by lazy {
         Retrofit.Builder()
             .baseUrl("https://gigmap-api.onrender.com/")
+            .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(WebService::class.java)
