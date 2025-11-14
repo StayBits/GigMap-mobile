@@ -1,7 +1,6 @@
 package com.example.gigmap_frontend_sprint1.view
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -33,31 +32,27 @@ fun Home(nav: NavHostController) {
     val postVM: PostViewModel = viewModel()
     val communityVm: CommunityViewModel = viewModel()
 
-
-
-    //awar
     val context = LocalContext.current
 
-    //awar
+    // Concierto giglist
+    var pendingConcertFromProfile by remember { mutableStateOf<Int?>(null) }
+
+    // Comunidad list
+    var pendingCommunityFromProfile by remember { mutableStateOf<Int?>(null) }
 
     LaunchedEffect(Unit) {
         userVM.loadUserId(context)
     }
-
-
-
-
 
     Scaffold(
         topBar = {
             TopBar(
                 onBackClick = {
                     if (!internalNav.popBackStack()) {
-
                         nav.popBackStack()
                     }
                 },
-                onNotificationClick = { /* TODO: notificaciones */ }
+                onNotificationClick = { /* TODO */ }
             )
         },
         bottomBar = {
@@ -74,7 +69,18 @@ fun Home(nav: NavHostController) {
                 .padding(paddingValues)
         ) {
             when (selectedItem) {
+
+                // ---------- TAB 0: FEED / CONCIERTOS ----------
                 0 -> {
+                    // Si venimos desde el perfil con un concierto pendiente, abrimos detalle aquí
+                    LaunchedEffect(pendingConcertFromProfile) {
+                        val id = pendingConcertFromProfile
+                        if (id != null) {
+                            internalNav.navigate("concert/$id")
+                            pendingConcertFromProfile = null
+                        }
+                    }
+
                     NavHost(
                         navController = internalNav,
                         startDestination = "homecontent"
@@ -88,7 +94,6 @@ fun Home(nav: NavHostController) {
                             )
                         }
 
-
                         composable(
                             route = "user/{userId}",
                             arguments = listOf(navArgument("userId") { type = NavType.IntType })
@@ -96,25 +101,38 @@ fun Home(nav: NavHostController) {
                             val userId = backStackEntry.arguments?.getInt("userId") ?: 0
 
                             Profile(
-                                rootNav = nav,          // el nav raíz para cerrar sesión etc
-                                innerNav = internalNav, // para navegación dentro de perfil
+                                rootNav = nav,
+                                innerNav = internalNav,
                                 userVM = userVM,
                                 concertVM = concertVM,
                                 postVM = postVM,
-                                viewedUserId = userId,// <- ESTO ES LO IMPORTANTE
-                                context = LocalContext.current
+                                communityVM = communityVm,
+                                viewedUserId = userId,
+                                context = LocalContext.current,
+                                onOpenConcertFromProfile = { id ->
+                                    // desde perfil → queremos abrir concierto en tab 0
+                                    pendingConcertFromProfile = id
+                                    selectedItem = 0
+                                },
+                                onOpenCommunityFromProfile = { id ->
+                                    // desde perfil → queremos abrir comunidad en tab 2
+                                    pendingCommunityFromProfile = id
+                                    selectedItem = 2
+                                },
+                                onSelectTab = { index ->
+                                    selectedItem = index
+                                }
                             )
                         }
-
 
                         composable("concertsList") {
                             ConcertsList(
                                 internalNav,
                                 concertVM = concertVM,
                                 userVm = userVM
-
                             )
                         }
+
                         composable("createConcert") {
                             CreateConcert(
                                 internalNav,
@@ -122,6 +140,7 @@ fun Home(nav: NavHostController) {
                                 userVM = userVM
                             )
                         }
+
                         composable(
                             route = "concert/{concertId}",
                             arguments = listOf(navArgument("concertId") { type = NavType.IntType })
@@ -132,41 +151,6 @@ fun Home(nav: NavHostController) {
                                 concertId = concertId,
                                 concertVM = concertVM,
                                 userVM = userVM
-                            )
-                        }
-
-
-
-                    }
-                }
-                1 -> Map(nav)
-
-                //awar
-                2 -> {
-
-                    NavHost(
-                        navController = internalNav,
-                        startDestination = "communitiesList"
-                    ) {
-                        composable("communitiesList") {
-                            CommunitiesList(nav = internalNav)
-                        }
-
-
-                        composable(
-                            route = "user/{userId}",
-                            arguments = listOf(navArgument("userId") { type = NavType.IntType })
-                        ) { backStackEntry ->
-                            val userId = backStackEntry.arguments?.getInt("userId") ?: 0
-
-                            Profile(
-                                rootNav = nav,          // el nav raíz para cerrar sesión etc
-                                innerNav = internalNav, // para navegación dentro de perfil
-                                userVM = userVM,
-                                concertVM = concertVM,
-                                postVM = postVM,
-                                viewedUserId = userId,// <- ESTO ES LO IMPORTANTE
-                                context = LocalContext.current
                             )
                         }
 
@@ -181,19 +165,82 @@ fun Home(nav: NavHostController) {
                                 userVm = userVM,
                                 postVm = postVM,
                                 communityVm = communityVm
+                            )
+                        }
+                    }
+                }
 
+                // ---------- TAB 1: MAPA ----------
+                1 -> Map(nav)
+
+                // ---------- TAB 2: COMMUNITIES ----------
+                2 -> {
+                    // Si venimos desde el perfil con una comunidad pendiente, abrimos detalle aquí
+                    LaunchedEffect(pendingCommunityFromProfile) {
+                        val id = pendingCommunityFromProfile
+                        if (id != null) {
+                            internalNav.navigate("community/$id")
+                            pendingCommunityFromProfile = null
+                        }
+                    }
+
+                    NavHost(
+                        navController = internalNav,
+                        startDestination = "communitiesList"
+                    ) {
+                        composable("communitiesList") {
+                            CommunitiesList(nav = internalNav)
+                        }
+
+                        composable(
+                            route = "user/{userId}",
+                            arguments = listOf(navArgument("userId") { type = NavType.IntType })
+                        ) { backStackEntry ->
+                            val userId = backStackEntry.arguments?.getInt("userId") ?: 0
+
+                            Profile(
+                                rootNav = nav,
+                                innerNav = internalNav,
+                                userVM = userVM,
+                                concertVM = concertVM,
+                                postVM = postVM,
+                                communityVM = communityVm,
+                                viewedUserId = userId,
+                                context = LocalContext.current,
+                                onOpenConcertFromProfile = { id ->
+                                    pendingConcertFromProfile = id
+                                    selectedItem = 0
+                                },
+                                onOpenCommunityFromProfile = { id ->
+                                    pendingCommunityFromProfile = id
+                                    selectedItem = 2
+                                },
+                                onSelectTab = { index ->
+                                    selectedItem = index
+                                }
                             )
                         }
 
-                        // dentro del NavHost de communities (añadir junto a los otros composable)
+                        composable(
+                            route = "community/{communityId}",
+                            arguments = listOf(navArgument("communityId") { type = NavType.IntType })
+                        ) { backStackEntry ->
+                            val communityId = backStackEntry.arguments?.getInt("communityId") ?: 0
+                            Community(
+                                navController = internalNav,
+                                communityId = communityId,
+                                userVm = userVM,
+                                postVm = postVM,
+                                communityVm = communityVm
+                            )
+                        }
+
                         composable("createCommunity") {
-                            // pasar el mismo viewModel que creaste arriba en Home (communityVm)
                             CreateCommunity(
                                 nav = internalNav,
                                 viewModel = communityVm
                             )
                         }
-
 
                         composable(
                             route = "createPost/{communityId}",
@@ -210,22 +257,32 @@ fun Home(nav: NavHostController) {
                     }
                 }
 
-                //awar
+                // ---------- TAB 3: PROFILE ----------
                 3 -> {
-                    // Creamos un nav host interno para el tab "Profile"
                     NavHost(
                         navController = internalNav,
                         startDestination = "profile"
                     ) {
                         composable("profile") {
-
                             Profile(
-                                rootNav = nav,             // nav raíz que SÍ tiene "login"
-                                innerNav = internalNav,    // nav interno para "editProfile"
+                                rootNav = nav,
+                                innerNav = internalNav,
                                 userVM = userVM,
                                 concertVM = concertVM,
                                 postVM = postVM,
-                                context = LocalContext.current
+                                communityVM = communityVm,
+                                context = LocalContext.current,
+                                onOpenConcertFromProfile = { id ->
+                                    pendingConcertFromProfile = id
+                                    selectedItem = 0
+                                },
+                                onOpenCommunityFromProfile = { id ->
+                                    pendingCommunityFromProfile = id
+                                    selectedItem = 2
+                                },
+                                onSelectTab = { index ->
+                                    selectedItem = index
+                                }
                             )
                         }
 
@@ -242,19 +299,27 @@ fun Home(nav: NavHostController) {
                             )
                         }
 
+                        composable(
+                            route = "community/{communityId}",
+                            arguments = listOf(navArgument("communityId") { type = NavType.IntType })
+                        ) { backStackEntry ->
+                            val communityId = backStackEntry.arguments?.getInt("communityId") ?: 0
+                            Community(
+                                navController = internalNav,
+                                communityId = communityId,
+                                userVm = userVM,
+                                postVm = postVM,
+                                communityVm = communityVm
+                            )
+                        }
 
                         composable("editProfile") {
-
                             EditProfile(
                                 nav = internalNav,
                                 userVM = userVM
                             )
                         }
                     }
-
-
-
-
                 }
             }
         }
