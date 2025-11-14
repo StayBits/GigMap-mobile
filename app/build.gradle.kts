@@ -46,8 +46,9 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     //librerías para retrofit
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
-
+    implementation("com.squareup.retrofit2:converter-gson:2.11.0")// build.gradle.kts
+    implementation("br.com.devsrsouza.compose.icons:font-awesome:1.1.0")
+    implementation("androidx.compose.animation:animation:1.6.0")
     implementation("com.github.bumptech.glide:compose:1.0.0-beta01")
     implementation(libs.androidx.compose.runtime)
     implementation(libs.androidx.compose.ui.geometry)
@@ -67,6 +68,8 @@ dependencies {
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.8.1")
     implementation("androidx.compose.ui:ui-text-google-fonts:1.6.0")
+    implementation(libs.play.services.places)
+    implementation(libs.androidx.espresso.core)
     // librerías para
     val nav_version = "2.9.5"
     // Jetpack Compose Integration

@@ -6,7 +6,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 internal object M1AUApiClient {
-    private const val BASE_URL = "http://10.0.2.2:3030/"
+    private const val BASE_URL = "https://m1au.onrender.com"
 
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BASIC

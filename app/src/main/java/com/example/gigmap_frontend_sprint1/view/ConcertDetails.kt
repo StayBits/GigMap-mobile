@@ -34,7 +34,7 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 val BurgundyDark = Color(0xFF5C0F1A)
-val darkgray = Color(0xFF736D6D)
+
 val CreamBackground = Color(0xFFF6F6F6)
 
 @OptIn(ExperimentalGlideComposeApi::class)
