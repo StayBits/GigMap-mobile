@@ -31,7 +31,8 @@ val InterFontFamily = FontFamily(
 @Composable
 fun TopBar(
     onBackClick: () -> Unit = {},
-    onNotificationClick: () -> Unit = {}
+    onNotificationClick: () -> Unit = {},
+    showNotificationIcon: Boolean = true
 ) {
     val backgroundColor = Color.White
     val iconColor = Color(0xFF5C0F1A)
@@ -73,16 +74,20 @@ fun TopBar(
                 letterSpacing = 0.sp
             )
 
-            IconButton(
-                onClick = onNotificationClick,
-                modifier = Modifier.size(22.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Notifications,
-                    contentDescription = "Notificaciones",
-                    tint = iconColor,
+            if (showNotificationIcon) {
+                IconButton(
+                    onClick = onNotificationClick,
                     modifier = Modifier.size(22.dp)
-                )
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Notifications,
+                        contentDescription = "Notificaciones",
+                        tint = iconColor,
+                        modifier = Modifier.size(22.dp)
+                    )
+                }
+            } else {
+                Spacer(modifier = Modifier.size(22.dp))
             }
         }
     }
@@ -105,3 +110,4 @@ fun ScreenWithTopBar(
         content(paddingValues)
     }
 }
+

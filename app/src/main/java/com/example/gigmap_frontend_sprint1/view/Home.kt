@@ -1,5 +1,7 @@
 package com.example.gigmap_frontend_sprint1.view
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,15 +15,18 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.gigmap_frontend_sprint1.components.BottomBar
 import com.example.gigmap_frontend_sprint1.components.TopBar
 import com.example.gigmap_frontend_sprint1.viewmodel.CommunityViewModel
 import com.example.gigmap_frontend_sprint1.viewmodel.ConcertViewModel
+import com.example.gigmap_frontend_sprint1.viewmodel.NotificationViewModel
 import com.example.gigmap_frontend_sprint1.viewmodel.PostViewModel
 import com.example.gigmap_frontend_sprint1.viewmodel.UserViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Home(nav: NavHostController) {
     var selectedItem by remember { mutableIntStateOf(0) }
@@ -31,8 +36,10 @@ fun Home(nav: NavHostController) {
     val userVM: UserViewModel = viewModel()
     val postVM: PostViewModel = viewModel()
     val communityVm: CommunityViewModel = viewModel()
-
+    val notificationVm: NotificationViewModel = viewModel()
     val context = LocalContext.current
+    val navBackStackEntry by internalNav.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
 
     // Concierto giglist
     var pendingConcertFromProfile by remember { mutableStateOf<Int?>(null) }
@@ -52,7 +59,10 @@ fun Home(nav: NavHostController) {
                         nav.popBackStack()
                     }
                 },
-                onNotificationClick = { /* TODO */ }
+                onNotificationClick = {
+                    internalNav.navigate("notifications")
+                },
+                showNotificationIcon = currentRoute != "notifications"
             )
         },
         bottomBar = {
@@ -166,6 +176,10 @@ fun Home(nav: NavHostController) {
                                 postVm = postVM,
                                 communityVm = communityVm
                             )
+                        }
+
+                        composable("notifications") {
+                            NotificationsList(notificationVm)
                         }
                     }
                 }

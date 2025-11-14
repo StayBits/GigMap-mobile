@@ -4,6 +4,7 @@ import com.example.gigmap_frontend_sprint1.model.AttendeeRequest
 import com.example.gigmap_frontend_sprint1.model.Community
 import com.example.gigmap_frontend_sprint1.model.ConcertCreateRequest
 
+import com.example.gigmap_frontend_sprint1.model.Notification
 import com.example.gigmap_frontend_sprint1.model.Concerts
 import com.example.gigmap_frontend_sprint1.model.CreateDeviceTokenRequest
 import com.example.gigmap_frontend_sprint1.model.LoginRequest
@@ -135,4 +136,7 @@ interface WebService {
 
     @POST("api/v1/device_tokens")
     suspend fun createDeviceToken(@Body deviceTokenRequest: CreateDeviceTokenRequest): Response<Unit>
+
+    @GET("api/v1/notifications/user/{userId}")
+    suspend fun getAllNotificationsByUserId(@Path("userId") userId: Int) : Response<List<Notification>>
 }
