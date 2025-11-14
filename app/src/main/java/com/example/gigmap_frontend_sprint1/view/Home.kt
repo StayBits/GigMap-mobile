@@ -48,7 +48,7 @@ fun Home(nav: NavHostController) {
     var pendingCommunityFromProfile by remember { mutableStateOf<Int?>(null) }
 
     LaunchedEffect(Unit) {
-        userVM.loadUserId(context)
+        userVM.loadAuthFromPrefs(context)
     }
 
     Scaffold(

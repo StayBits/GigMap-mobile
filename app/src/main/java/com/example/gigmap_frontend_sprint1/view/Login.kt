@@ -54,7 +54,7 @@ fun Login( userViewModel: UserViewModel,
 
     //awar
     LaunchedEffect(Unit) {
-        userViewModel.loadUserId(context)
+        userViewModel.loadAuthFromPrefs(context)
     }
     //awar
     LaunchedEffect(userViewModel.currentUserId) {
@@ -71,8 +71,8 @@ fun Login( userViewModel: UserViewModel,
     val pref = context.getSharedPreferences("pref1", Context.MODE_PRIVATE)
 
     val check: Boolean = pref!!.getBoolean("chk", false)
-    var email: String= pref.getString("email", "")!!
-    var password: String= pref.getString("pass", "")!!
+    val email: String= pref.getString("email", "")!!
+    val password: String= pref.getString("pass", "")!!
 
     var txtEmail by remember { mutableStateOf(email) }
     var txtPass by remember { mutableStateOf(password) }
@@ -183,20 +183,15 @@ fun Login( userViewModel: UserViewModel,
                             password = txtPass,
                             context = context
                         ) {
-
                             val editor = pref.edit()
-
-                            editor.putInt("userId", userViewModel.currentUserId)
 
                             if (chk) {
                                 editor.putString("email", txtEmail)
                                 editor.putString("pass", txtPass)
                                 editor.putBoolean("chk", true)
-                            } else {
-                                editor.clear()
                             }
-                            editor.apply()
 
+                            editor.apply()
                             nav.navigate("homecontent")
                         }
                     }
