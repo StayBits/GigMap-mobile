@@ -12,6 +12,7 @@ import com.example.gigmap_frontend_sprint1.model.Post
 import com.example.gigmap_frontend_sprint1.model.PostCreateRequest
 import com.example.gigmap_frontend_sprint1.model.RegisterRequest
 import com.example.gigmap_frontend_sprint1.model.RelatedEvent
+import com.example.gigmap_frontend_sprint1.model.RelatedEventCreateRequest
 import com.example.gigmap_frontend_sprint1.model.UserEditRequest
 import com.example.gigmap_frontend_sprint1.model.Users
 import retrofit2.Response
@@ -116,8 +117,18 @@ interface WebService {
     ): Response<List<Post>>
 
 
-    @GET("api/v1/relatedEvents")
+    @GET("api/v1/related-events")
     suspend fun getRelatedEvents(): Response<List<RelatedEvent>>
+
+    @POST("api/v1/related-events")
+    suspend fun createRelatedEvent(
+        @Body request: RelatedEventCreateRequest
+    ): Response<RelatedEvent>
+
+    @GET("api/v1/related-events/concert/{concertId}")
+    suspend fun getRelatedEventsByConcertId(
+        @Path("concertId") concertId: Long
+    ): Response<List<RelatedEvent>>
 
     @GET("api/v1/concerts/genre/{genre}")
     suspend fun getConcertsByGenre(@Path("genre") genre: String): Response<List<Concerts>>

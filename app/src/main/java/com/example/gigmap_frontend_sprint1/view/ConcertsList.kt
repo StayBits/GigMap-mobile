@@ -32,6 +32,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.example.gigmap_frontend_sprint1.view.RightSideDrawer
 import com.example.gigmap_frontend_sprint1.viewmodel.ConcertViewModel
 import com.example.gigmap_frontend_sprint1.viewmodel.UserViewModel
 import kotlinx.coroutines.launch
@@ -74,7 +75,7 @@ fun ConcertsList(
                     .background(Color.White)
                     .padding(24.dp)
             ) {
-                // 🔹 Header con título y botón cerrar
+                // Header con título y botón cerrar
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -105,7 +106,7 @@ fun ConcertsList(
                     "WORLD", "HIP_HOP", "CLASSICAL", "ELECTRONIC", "OTHER"
                 )
 
-                // 🔸 Scroll con géneros (toma todo el espacio disponible)
+                //  Scroll con géneros
                 LazyColumn(
                     modifier = Modifier.weight(1f),
                     verticalArrangement = Arrangement.spacedBy(10.dp)
@@ -132,7 +133,7 @@ fun ConcertsList(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // 🔹 Botón aplicar filtro (fijo al final)
+                //  Botón aplicar filtro (fijo al final)
                 Button(
                     onClick = {
                         if (selectedGenres.isEmpty()) {
@@ -149,7 +150,7 @@ fun ConcertsList(
                     Text("APLICAR FILTROS")
                 }
 
-                // 🔹 Botón limpiar (fijo abajo)
+                //  Botón limpiar (fijo abajo)
                 Text(
                     text = "LIMPIAR FILTROS",
                     color = Color(0xFF5C0F1A),
@@ -167,7 +168,7 @@ fun ConcertsList(
             }
         }
     ) {
-        // 🎶 Contenido principal
+        //  Contenido principal
         Scaffold(
             floatingActionButton = {
                 if (currentUser?.role == "ARTIST") {

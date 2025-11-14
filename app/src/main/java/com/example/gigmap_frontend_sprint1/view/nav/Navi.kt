@@ -23,6 +23,7 @@ import com.example.gigmap_frontend_sprint1.view.UserView
 import com.example.gigmap_frontend_sprint1.viewmodel.CommunityViewModel
 import com.example.gigmap_frontend_sprint1.viewmodel.ConcertViewModel
 import com.example.gigmap_frontend_sprint1.viewmodel.PostViewModel
+import com.example.gigmap_frontend_sprint1.viewmodel.RelatedEventViewModel
 import com.example.gigmap_frontend_sprint1.viewmodel.UserViewModel
 @Composable
 fun Navi(
@@ -30,7 +31,8 @@ fun Navi(
     concertViewModel: ConcertViewModel,
     postViewModel: PostViewModel,
     communityViewModel: CommunityViewModel,
-    context: Context
+    context: Context,
+    relatedEventViewModel: RelatedEventViewModel,
 ) {
     val navController = rememberNavController()
 
@@ -77,7 +79,8 @@ fun Navi(
                 navController = navController,
                 concertId = concertId,
                 concertVM = concertViewModel,
-                userVM = userViewModel
+                userVM = userViewModel,
+                relatedEventVM = relatedEventViewModel
             )
         }
 

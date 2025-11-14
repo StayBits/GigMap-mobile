@@ -1,4 +1,6 @@
 package com.example.gigmap_frontend_sprint1.view
+
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -23,11 +25,16 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
-import com.example.gigmap_frontend_sprint1.viewmodel.ConcertViewModel
 import com.example.gigmap_frontend_sprint1.model.Concerts
+import com.example.gigmap_frontend_sprint1.viewmodel.ConcertViewModel
+import com.example.gigmap_frontend_sprint1.viewmodel.RelatedEventViewModel
 import com.example.gigmap_frontend_sprint1.viewmodel.UserViewModel
+import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 val BurgundyDark = Color(0xFF5C0F1A)
+val darkgray = Color(0xFF736D6D)
 val CreamBackground = Color(0xFFF6F6F6)
 
 @OptIn(ExperimentalGlideComposeApi::class)
@@ -36,9 +43,12 @@ fun ConcertDetails(
     navController: NavHostController,
     concertId: Int,
     concertVM: ConcertViewModel = viewModel(),
-    userVM: UserViewModel = viewModel()
+    userVM: UserViewModel = viewModel(),
+    relatedEventVM: RelatedEventViewModel = viewModel()
 ) {
     val concert = concertVM.listaConcerts.find { it.id == concertId }
+
+    var showCreateRelatedDialog by remember { mutableStateOf(false) }
 
     if (concert == null) {
         Box(
@@ -49,22 +59,30 @@ fun ConcertDetails(
         }
         return
     }
+
     val currentUserId = userVM.currentUserId
-
-    val relatedConcerts = emptyList<Concerts>()
-
+    val relatedConcerts = emptyList<Concerts>() // aún no lo usas, lo dejo por si luego enlazas conciertos
     val users = userVM.listaUsers
     val confirmedAttendees = concertVM.getConfirmedUsers(concert, users)
 
+    // ⚠️ IMPORTANTE: lista de eventos que viene del ViewModel (llenada desde backend)
+    val relatedEvents = relatedEventVM.listaRelatedEvents
+
+    // 👉 Cuando entras a esta pantalla, trae los eventos relacionados desde el backend
+    LaunchedEffect(concert.id) {
+        concert.id?.let { id ->
+            relatedEventVM.loadRelatedEventsByConcertId(id.toLong())
+        }
+    }
 
     var isConfirmed by remember { mutableStateOf(false) }
 
-    // Inicializa estado desde concert.attendees
+    // Inicializa estado de asistencia desde concert.attendees
     LaunchedEffect(concert.attendees, currentUserId) {
         isConfirmed = currentUserId?.let { id -> concert.attendees.contains(id) } ?: false
     }
 
-
+    // Asegura que la lista de usuarios esté cargada
     LaunchedEffect(Unit) {
         if (userVM.listaUsers.isEmpty()) {
             userVM.getUsers()
@@ -77,6 +95,7 @@ fun ConcertDetails(
             .background(CreamBackground)
             .verticalScroll(rememberScrollState())
     ) {
+        // -------- HEADER IMAGEN DEL CONCIERTO --------
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -111,6 +130,7 @@ fun ConcertDetails(
             }
         }
 
+        // -------- CARD INFO PRINCIPAL --------
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -183,6 +203,7 @@ fun ConcertDetails(
             }
         }
 
+        //  BOTONES CONFIRMAR / TICKETs
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -210,11 +231,18 @@ fun ConcertDetails(
                 },
                 enabled = currentUserId != null,
                 modifier = Modifier.weight(1f),
-                colors = ButtonDefaults.buttonColors(containerColor = if (!isConfirmed) BurgundyDark else Color(0xFFB00020)),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (!isConfirmed) BurgundyDark else Color(0xFF2C2C2C)
+                ),
                 shape = RoundedCornerShape(8.dp),
                 contentPadding = PaddingValues(vertical = 12.dp)
             ) {
-                Text(text = if (!isConfirmed) "Confirmar asistencia" else "Cancelar confirmación", fontSize = 13.sp, fontWeight = FontWeight.SemiBold, fontFamily = InterFontFamily)
+                Text(
+                    text = if (!isConfirmed) "Confirmar asistencia" else "Cancelar confirmación",
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    fontFamily = InterFontFamily
+                )
             }
 
             Button(
@@ -224,11 +252,18 @@ fun ConcertDetails(
                 shape = RoundedCornerShape(8.dp),
                 contentPadding = PaddingValues(vertical = 12.dp)
             ) {
-                Text(text = "Tickets", fontSize = 13.sp, fontWeight = FontWeight.SemiBold, fontFamily = InterFontFamily)
+                Text(
+                    text = "Tickets",
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    fontFamily = InterFontFamily
+                )
             }
         }
+
         Spacer(modifier = Modifier.height(20.dp))
 
+        // ---------- EVENTOS RELACIONADOS ----------
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -238,6 +273,7 @@ fun ConcertDetails(
             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
+
                 Text(
                     text = "Eventos relacionados",
                     fontSize = 16.sp,
@@ -248,101 +284,141 @@ fun ConcertDetails(
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                if (relatedConcerts.isEmpty()) {
-                    OutlinedButton(
-                        onClick = { },
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White),
-                        border = androidx.compose.foundation.BorderStroke(1.5.dp, Color.White),
-                        shape = RoundedCornerShape(8.dp)
-                    ) {
-                        Text(
-                            text = "Crear evento relacionado",
-                            modifier = Modifier.padding(vertical = 8.dp),
-                            fontSize = 16.sp,
-                            fontFamily = InterFontFamily,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
+                // 1. --- LISTA DE EVENTOS ---
+                if (relatedEvents.isEmpty()) {
+
+                    Text(
+                        "No hay eventos relacionados todavía",
+                        color = Color.White,
+                        fontFamily = InterFontFamily,
+                        fontSize = 13.sp,
+                        modifier = Modifier.padding(vertical = 8.dp)
+                    )
+
                 } else {
-                    relatedConcerts.forEach { relatedConcert ->
-                        Card(
-                            onClick = { navController.navigate("concert/${relatedConcert.id}") },
-                            modifier = Modifier.fillMaxWidth(),
-                            shape = RoundedCornerShape(10.dp),
-                            colors = CardDefaults.cardColors(containerColor = Color.White)
+
+                    relatedEvents.forEach { relatedEvent ->
+
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 6.dp),
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Row(
-                                modifier = Modifier.padding(10.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                GlideImage(
-                                    model = relatedConcert.image,
-                                    contentDescription = relatedConcert.name,
-                                    modifier = Modifier
-                                        .size(55.dp)
-                                        .clip(RoundedCornerShape(8.dp)),
-                                    contentScale = ContentScale.Crop
+                            GlideImage(
+                                model = concert.image,
+                                contentDescription = relatedEvent.titulo,
+                                modifier = Modifier
+                                    .size(72.dp)
+                                    .clip(RoundedCornerShape(10.dp)),
+                                contentScale = ContentScale.Crop
+                            )
+
+                            Spacer(modifier = Modifier.width(12.dp))
+
+                            Column(modifier = Modifier.weight(1f)) {
+
+                                Text(
+                                    text = relatedEvent.titulo,
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    fontFamily = InterFontFamily,
+                                    color = Color.White
                                 )
 
-                                Spacer(modifier = Modifier.width(10.dp))
+                                Spacer(modifier = Modifier.height(4.dp))
 
-                                Column(modifier = Modifier.weight(1f)) {
-                                    Text(
-                                        text = relatedConcert.name,
-                                        fontSize = 14.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        color = BurgundyDark
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Icon(
+                                        imageVector = Icons.Default.LocationOn,
+                                        contentDescription = null,
+                                        tint = Color.White,
+                                        modifier = Modifier.size(14.dp)
                                     )
-                                    Spacer(modifier = Modifier.height(3.dp))
-                                    Row(verticalAlignment = Alignment.CenterVertically) {
-                                        Icon(
-                                            imageVector = Icons.Default.LocationOn,
-                                            contentDescription = null,
-                                            tint = BurgundyDark,
-                                            modifier = Modifier.size(12.dp)
-                                        )
-                                        Spacer(modifier = Modifier.width(3.dp))
-                                        Text(
-                                            text = relatedConcert.venue.name,
-                                            fontSize = 11.sp,
-                                            color = Color.Gray
-                                        )
-                                    }
-                                    Row(verticalAlignment = Alignment.CenterVertically) {
-                                        Icon(
-                                            imageVector = Icons.Default.CalendarToday,
-                                            contentDescription = null,
-                                            tint = BurgundyDark,
-                                            modifier = Modifier.size(12.dp)
-                                        )
-                                        Spacer(modifier = Modifier.width(3.dp))
-                                        Text(
-                                            text = relatedConcert.date.take(10).replace("-", "/"),
-                                            fontSize = 11.sp,
-                                            color = Color.Gray
-                                        )
-                                    }
+                                    Spacer(modifier = Modifier.width(4.dp))
+                                    Text(
+                                        text = relatedEvent.venue.address,
+                                        fontSize = 12.sp,
+                                        fontFamily = InterFontFamily,
+                                        color = Color.White
+                                    )
+                                }
+
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Icon(
+                                        imageVector = Icons.Default.CalendarToday,
+                                        contentDescription = null,
+                                        tint = Color.White,
+                                        modifier = Modifier.size(14.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(4.dp))
+                                    Text(
+                                        text = formatRelatedEventDate(relatedEvent.datehour),
+                                        fontSize = 12.sp,
+                                        fontFamily = InterFontFamily,
+                                        color = Color.White
+                                    )
+                                }
+
+                                Spacer(modifier = Modifier.height(8.dp))
+
+                                OutlinedButton(
+                                    onClick = { /* detalle futuro */ },
+                                    border = BorderStroke(1.dp, Color.White),
+                                    colors = ButtonDefaults.outlinedButtonColors(
+                                        containerColor = Color.Transparent,
+                                        contentColor = Color.White
+                                    ),
+                                    shape = RoundedCornerShape(50.dp),
+                                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
+                                    modifier = Modifier.height(32.dp)
+                                ) {
+                                    Text(
+                                        text = "✓  Me interesa",
+                                        fontSize = 12.sp,
+                                        fontFamily = InterFontFamily,
+                                        fontWeight = FontWeight.SemiBold
+                                    )
                                 }
                             }
                         }
-                        Spacer(modifier = Modifier.height(10.dp))
                     }
+                }
 
+
+
+                Spacer(modifier = Modifier.height(12.dp))
+                OutlinedButton(
+                    onClick = { showCreateRelatedDialog = true },
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White),
+                    border = BorderStroke(1.5.dp, Color.White),
+                    shape = RoundedCornerShape(50.dp)
+                ) {
                     Text(
-                        text = "Ir a la comunidad de Stray Kids",
-                        color = Color.White,
+                        text = "Crear evento relacionado",
+                        modifier = Modifier.padding(vertical = 8.dp),
+                        fontSize = 16.sp,
                         fontFamily = InterFontFamily,
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
+                        fontWeight = FontWeight.Bold
                     )
                 }
             }
         }
 
+        //  DIÁLOGO PARA CREAR EVENTO RELACIONADO
+        if (showCreateRelatedDialog) {
+            CreateRelatedEventDialog(
+                concertId = concert.id ?: concertId,
+                currentUserId = currentUserId,
+                relatedEventVM = relatedEventVM,
+                onDismiss = { showCreateRelatedDialog = false }
+            )
+        }
+
         Spacer(modifier = Modifier.height(20.dp))
 
+        //  SECCIÓN DE USUARIOS CONFIRMADOS
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -455,5 +531,16 @@ fun ConcertDetails(
             }
         }
         Spacer(modifier = Modifier.height(20.dp))
+    }
+}
+
+/** Helper para mostrar fecha tipo "12 de Abril 2026" */
+fun formatRelatedEventDate(dateTimeIso: String): String {
+    return try {
+        val parsed = OffsetDateTime.parse(dateTimeIso)
+        val formatter = DateTimeFormatter.ofPattern("dd 'de' MMMM yyyy", Locale("es", "ES"))
+        parsed.toLocalDate().format(formatter)
+    } catch (e: Exception) {
+        dateTimeIso.take(10)
     }
 }

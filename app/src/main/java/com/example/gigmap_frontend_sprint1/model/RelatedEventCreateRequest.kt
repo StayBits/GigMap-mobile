@@ -1,7 +1,6 @@
 package com.example.gigmap_frontend_sprint1.model
 
-data class RelatedEvent(
-    val id: Int?,
+data class RelatedEventCreateRequest(
     val concertId: Int,
     val titulo: String,
     val datehour: String,
@@ -9,6 +8,5 @@ data class RelatedEvent(
     val tipo: String,
     val venue: Venue,
     val status: String,
-    val organizadorId: Int,
-    val participantes: List<Int> = emptyList()
+    val organizadorId: Int
 )
