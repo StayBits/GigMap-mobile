@@ -37,6 +37,12 @@ class UserViewModel : ViewModel() {
         currentUserId = sharedPref.getInt("userId", 0)
     }
 
+    fun loadAuthFromPrefs(context: Context) {
+        val sharedPref = context.getSharedPreferences("pref1", Context.MODE_PRIVATE)
+        currentUserId = sharedPref.getInt("userId", 0)
+        TokenManager.token = sharedPref.getString("authToken", null)
+    }
+
 
     fun getUsers() = viewModelScope.launch(Dispatchers.IO) {
         val r = RetrofitClient.webService.getUsers()
@@ -131,6 +137,7 @@ class UserViewModel : ViewModel() {
                         val sharedPref = context.getSharedPreferences("pref1", Context.MODE_PRIVATE)
                         with(sharedPref.edit()) {
                             putInt("userId", loginResponse.id)
+                            putString("authToken", loginResponse.token)
                             apply()
                         }
 

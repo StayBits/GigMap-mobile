@@ -6,6 +6,6 @@ data class Users (
     val name: String,
     val username: String,
     val role: String,
-    val bio: String,
+    val descripcion: String,
     val image: String
 )

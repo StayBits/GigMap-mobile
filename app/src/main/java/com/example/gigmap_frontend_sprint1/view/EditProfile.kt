@@ -59,7 +59,7 @@ fun EditProfile(
     var name by remember { mutableStateOf(currentUser?.name ?: "") }
     var username by remember { mutableStateOf(currentUser?.username ?: "") }
     var email by remember { mutableStateOf(currentUser?.email ?: "") }
-    var descripcion by remember { mutableStateOf(currentUser?.bio ?: "") }
+    var descripcion by remember { mutableStateOf(currentUser?.descripcion ?: "") }
     var role by remember { mutableStateOf(currentUser?.role ?: "") } // "ARTIST" / "FAN"
 
     // imagen (URI local y URL subida)
