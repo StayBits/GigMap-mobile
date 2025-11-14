@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -44,6 +45,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.gigmap_frontend_sprint1.model.m1au.M1AUConcertCard
@@ -86,14 +88,13 @@ private fun M1AUChatDialog(
 ) {
     if (!isOpen) return
 
-    var input = remember { mutableStateOf("") }
+    val input = remember { mutableStateOf("") }
     val scope = rememberCoroutineScope()
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        confirmButton = {},
-        dismissButton = {},
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
+        properties = DialogProperties(usePlatformDefaultWidth = false)
     ) {
         Surface(
             shape = RoundedCornerShape(16.dp),
@@ -162,9 +163,11 @@ private fun M1AUChatDialog(
                     placeholder = { Text("Pregúntale algo a M1AU...") },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
-                    colors = TextFieldDefaults.textFieldColors(
-                        containerColor = Color(0xFFF5F5F5)
-                    )
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = Color(0xFFF5F5F5),
+                        unfocusedContainerColor = Color(0xFFF5F5F5),
+                        disabledContainerColor = Color(0xFFF5F5F5),
+                        errorContainerColor = Color(0xFFF5F5F5))
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))

@@ -47,6 +47,7 @@ dependencies {
     //librerías para retrofit
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
     implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+
     implementation("com.github.bumptech.glide:compose:1.0.0-beta01")
     implementation(libs.androidx.compose.runtime)
     implementation(libs.androidx.compose.ui.geometry)

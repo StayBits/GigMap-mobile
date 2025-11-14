@@ -31,6 +31,7 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.filled.CatchingPokemon
 import androidx.compose.material.icons.filled.Chat
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -288,7 +289,7 @@ fun HomeContent(
             .align(Alignment.BottomEnd)
             .padding(20.dp)
     ) {
-        Icon(imageVector = Icons.Default.Chat, contentDescription = "Abrir chat M1AU")
+        Icon(imageVector = Icons.Default.CatchingPokemon, contentDescription = "Abrir chat M1AU")
     }
 
     M1AUChatModal(
@@ -298,4 +299,5 @@ fun HomeContent(
             artistId?.toIntOrNull()?.let { nav.navigate("user/$it") }
         }
     )
+}
 }
