@@ -5,6 +5,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,10 +25,13 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.filled.Chat
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.IconButton
@@ -46,7 +50,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.example.gigmap_frontend_sprint1.view.chat.M1AUChatModal
 import com.example.gigmap_frontend_sprint1.viewmodel.ConcertViewModel
+import com.example.gigmap_frontend_sprint1.viewmodel.M1AUChatViewModel
 import com.example.gigmap_frontend_sprint1.viewmodel.PostViewModel
 import com.example.gigmap_frontend_sprint1.viewmodel.UserViewModel
 
@@ -56,7 +62,8 @@ fun HomeContent(
     nav: NavHostController,
     concertVM: ConcertViewModel = viewModel(),
     userVM: UserViewModel = viewModel(),
-    postVM: PostViewModel = viewModel()
+    postVM: PostViewModel = viewModel(),
+    chatViewModel: M1AUChatViewModel = viewModel()
 ) {
     val concerts = concertVM.listaConcerts
     val users    = userVM.listaUsers
@@ -71,13 +78,19 @@ fun HomeContent(
 
     val userById = remember(users) { users.associateBy { it.id } }
 
-    Column(
+    val isChatOpen = remember { mutableStateOf(false) }
+
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
-            .verticalScroll(rememberScrollState())
-            .padding(bottom = 70.dp)
     ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(bottom = 90.dp)
+        ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -267,4 +280,22 @@ fun HomeContent(
 
 
     }
+    FloatingActionButton(
+        onClick = { isChatOpen.value = true },
+        backgroundColor = Color(0xFF5C0F1A),
+        contentColor = Color.White,
+        modifier = Modifier
+            .align(Alignment.BottomEnd)
+            .padding(20.dp)
+    ) {
+        Icon(imageVector = Icons.Default.Chat, contentDescription = "Abrir chat M1AU")
+    }
+
+    M1AUChatModal(
+        isOpen = isChatOpen,
+        viewModel = chatViewModel,
+        onNavigateToArtist = { artistId, _ ->
+            artistId?.toIntOrNull()?.let { nav.navigate("user/$it") }
+        }
+    )
 }
